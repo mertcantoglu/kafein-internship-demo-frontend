@@ -14,7 +14,6 @@ import { EmployeeDetail } from './pages/EmployeeDetail';
 
 const pages = [
     { name: 'Employee', path: 'employee', element: <Employee /> },
-    // { name: 'Leaves', path: 'leaves', element: <Leaves /> }
 ];
 
 
@@ -23,15 +22,12 @@ function AppRoutes() {
         <Router>
             <TopBar pages = {pages}/>
             <Routes>
-                <Route index path="/" element={<Outlet />} />
+                <Route index path="/" element={<Employee />} />
                 <Route path="*" element={<Navigate to='/' replace />} />
 
-                {pages.map((page) => (
-                    <Route key={page.path} path={page.path} element={page.element} />
-                ))
-                }
+               
+                <Route index key='employee' path='employee' element={<Employee />} />
                 <Route path='/employee/:id' element = {<EmployeeDetail/>} />
-
                 
             </Routes>
         </Router>

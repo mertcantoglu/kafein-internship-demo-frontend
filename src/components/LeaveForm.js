@@ -27,6 +27,7 @@ const AddRecordDialog = ({ open, handleClose, handleAddRecord,employeeId }) => {
       handleClose();
     } catch (error) {
       console.error('Error adding new record:', error);
+      alert(error.response.data.message);
     }
   };
 
