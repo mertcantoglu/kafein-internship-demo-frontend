@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { TextField, Button, Container , Modal, Dialog, DialogContent, DialogTitle, DialogContentText} from '@mui/material';
+import { TextField, Button, Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions} from '@mui/material';
 import axios from 'axios';
+import { addEmployee } from '../helpers/API';
 
 function EmployeeForm({ handleModalClose, open }) {
 
@@ -36,7 +37,7 @@ function EmployeeForm({ handleModalClose, open }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:8080/api/employees', {...employee});
+      await addEmployee(employee);
       alert('Employee added successfully');
     } catch (error) {
       console.error('Error adding employee:', error);
@@ -48,8 +49,6 @@ function EmployeeForm({ handleModalClose, open }) {
     <Dialog 
     open={open} 
     onClose={handleModalClose}
-    style={modalStyle}
-    hideBackdrop
     >
         <DialogTitle>Add Employee</DialogTitle>
 
@@ -70,10 +69,15 @@ function EmployeeForm({ handleModalClose, open }) {
           <TextField name={field.name} label={field.label} onChange={handleChange} required fullWidth style={{marginBottom:10}}/>
         ))
         }
-        <Button type="submit" variant="contained" color="primary">Add Employee</Button>
+        
       </form>
       
     </DialogContent>
+
+    <DialogActions>
+                <Button onClick={handleModalClose}>Cancel</Button>
+                <Button onClick={handleSubmit}>Edit</Button>
+      </DialogActions>
     </Dialog>
   );
 }

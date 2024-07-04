@@ -7,9 +7,13 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Button,
+  Box,
+  IconButton,
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-const LeaveTable = ({ leaves }) => {
+const LeaveTable = ({ leaves ,onDelete }) => {
   return (
     <TableContainer component={Paper} >
       <Table>
@@ -20,6 +24,7 @@ const LeaveTable = ({ leaves }) => {
             <TableCell>Reason</TableCell>
             <TableCell>Created At</TableCell>
             <TableCell>Day</TableCell>
+            <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -30,6 +35,11 @@ const LeaveTable = ({ leaves }) => {
               <TableCell>{leave.reason || 'N/A'}</TableCell>
               <TableCell>{new Date(leave.createdAt).toLocaleString()}</TableCell>
               <TableCell>{leave.dayDifference}</TableCell>
+              <TableCell>
+                <IconButton onClick={() => (onDelete(leave.id))}>
+                  <DeleteIcon/>
+                </IconButton>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

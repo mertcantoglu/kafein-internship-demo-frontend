@@ -26,3 +26,19 @@ export const addLeaveRecord = async (leaveRecord) => {
   };
 
 
+export const deleteLeaveRecord = async (id) => {
+    const response = await api.delete(`/leaves/${id}`);
+    return response.data;
+  };
+
+export const addEmployee = async (employee) => {
+    const response = await api.post('/employees', employee);
+    return response.data;
+  };
+
+export const updateEmployee = async (employee) => {
+    const response = await api.put('/employees', employee);
+    return response.data;
+  };
+
+

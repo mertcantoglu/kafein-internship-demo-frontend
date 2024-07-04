@@ -13,9 +13,7 @@ export const TopBar = ({pages}) => {
     const navigate = useNavigate();
     return (
         <Box sx={{ flexGrow: 1 }}>
-
             <AppBar position="static">
-
                 <Toolbar>
                     {pages.map((page) => (
                         <MenuItem onClick={()=> navigate(page.path)}>
