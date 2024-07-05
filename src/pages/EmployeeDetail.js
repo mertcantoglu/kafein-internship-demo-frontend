@@ -1,110 +1,103 @@
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { addLeaveRecord, deleteLeaveRecord, fetchEmployee, fetchEmployeeLeaves } from '../helpers/API';
+import { fetchEmployee, fetchEmployeeLeaves } from '../helpers/API';
+import { Box, Paper, Typography, Snackbar, Alert } from '@mui/material';
+import EmployeeActions from '../components/EmployeeActions';
 import EmployeeCard from '../components/EmployeeCard';
 import LeaveTable from '../components/LeaveTable';
-import { Button, Box, Typography, Paper } from '@mui/material';
 import AddRecordDialog from '../components/LeaveForm';
 import EmployeeEditForm from '../components/EmployeeEditForm';
+import DeleteConfirmationDialog from '../components/EmployeeDeleteConfirm';
+import EmployeeNotFound from '../components/EmployeeNotFound';
 
-export const EmployeeDetail = () => {
-    const employeeId = useParams().id;
-    const [dialogRecordOpen, setRecordDialogOpen] = useState(false);
-    
-    const handleOpenRecordDialog = () => {
-        setRecordDialogOpen(true);
-    };
-  
-    const handleCloseRecordDialog = () => {
-        setRecordDialogOpen(false);
-    };
+const EmployeeDetail = () => {
+    const { id: employeeId } = useParams();
+    const [dialogState, setDialogState] = useState({
+        record: false,
+        edit: false,
+        delete: false,
+    });
+    const [snackbarState, setSnackbarState] = useState({
+        open: false,
+        message: '',
+        severity: 'success',
+    });
 
-    const handleAddRecord = () => {   
-        window.location.reload();
-        setRecordDialogOpen(false);
-    }
-
-    const [dialogEditOpen, setEditDialogOpen] = useState(false);
-    
-    const handleOpenEditDialog = () => {
-        setEditDialogOpen(true);
-    };
-  
-    const handleCloseEditDialog = () => {
-        window.location.reload();
-        setEditDialogOpen(false);
+    const handleDialogToggle = (type, state) => {
+        setDialogState(prevState => ({ ...prevState, [type]: state }));
     };
 
-    const handleDelete = async (id) => {
-        try{
-          await deleteLeaveRecord(id);
-          alert('Leave record deleted successfully');
-          window.location.reload();
-        }
-        catch(error){
-          console.error('Error deleting leave record:', error);
-          alert('Failed to delete leave record');
-        }
-      }
+    const handleSnackbarOpen = (message, severity) => {
+        setSnackbarState({ open: true, message, severity });
+    };
 
+    const handleSnackbarClose = () => {
+        setSnackbarState({ ...snackbarState, open: false });
+    };
 
-    const leavesQuery = useQuery(
-        {
-            queryKey: ['employeesLeaves', employeeId],
-            queryFn: () => fetchEmployeeLeaves(employeeId),
-        }
-    );
+    const leavesQuery = useQuery({
+        queryKey: ['employeesLeaves', employeeId],
+        queryFn: () => fetchEmployeeLeaves(employeeId),
+    });
 
-    const employeeQuery = useQuery(
-        {
-            queryKey: ['employee', employeeId],
-            queryFn: () => fetchEmployee(employeeId),
-        }
-    );
+    const employeeQuery = useQuery({
+        queryKey: ['employee', employeeId],
+        queryFn: () => fetchEmployee(employeeId),
+    });
 
-
+    const refetchData = () => {
+        leavesQuery.refetch();
+        employeeQuery.refetch();
+    };
 
     if (leavesQuery.isLoading || employeeQuery.isLoading) return <div>Loading...</div>;
-    if (leavesQuery.error || employeeQuery.error) return <div>Error: {employeeQuery.message}</div>;
+    if (leavesQuery.error || employeeQuery.error) return <EmployeeNotFound />;
 
-    console.log(leavesQuery.data);
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '80%', marginBottom: 2 }}>
                 <EmployeeCard employee={employeeQuery.data} />
-
-                
-
-               <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-               <Button variant="contained" color="secondary" onClick={handleOpenEditDialog} style={{width:150,height:100,alignSelf:'center', marginRight:30}}>
-                    Edit Employee
-                </Button>
-
-                <Button variant="contained" color="primary" onClick={handleOpenRecordDialog} style={{width:150,height:100,alignSelf:'center'}}>
-                    New Record
-                </Button>
-                </Box>
-                
+                <EmployeeActions handleDialogToggle={handleDialogToggle} />
             </Box>
             <Paper elevation={3} sx={{ width: '80%', padding: 2 }}>
                 <Typography variant="h6" component="div" gutterBottom>
                     Leaves
                 </Typography>
-                <LeaveTable leaves={leavesQuery.data} employeeId={employeeId}  onDelete={handleDelete}/>
+                <LeaveTable leaves={leavesQuery.data} employeeId={employeeId} handleSnackbarOpen={handleSnackbarOpen} refetchData={refetchData} />
             </Paper>
-
             <AddRecordDialog
-        open={dialogRecordOpen}
-        handleClose={handleCloseRecordDialog}
-        handleAddRecord={handleAddRecord}
-        employeeId={employeeQuery.data.id}
-      />
-            <EmployeeEditForm 
-            employeeProps={employeeQuery.data}
-            handleModalClose={handleCloseEditDialog}
-            open={dialogEditOpen} />
+                open={dialogState.record}
+                handleClose={() => handleDialogToggle('record', false)}
+                employeeId={employeeQuery.data.id}
+                handleSnackbarOpen={handleSnackbarOpen}
+                refetchData={refetchData}
+            />
+            <EmployeeEditForm
+                employeeProps={employeeQuery.data}
+                handleModalClose={() => handleDialogToggle('edit', false)}
+                open={dialogState.edit}
+                handleSnackbarOpen={handleSnackbarOpen}
+                refetchData={refetchData}
+            />
+            <DeleteConfirmationDialog
+                open={dialogState.delete}
+                handleClose={() => handleDialogToggle('delete', false)}
+                employeeId={employeeQuery.data.id}
+                handleSnackbarOpen={handleSnackbarOpen}
+                refetchData={refetchData}
+            />
+            <Snackbar
+                open={snackbarState.open}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+            >
+                <Alert onClose={handleSnackbarClose} severity={snackbarState.severity} sx={{ width: '100%' }}>
+                    {snackbarState.message}
+                </Alert>
+            </Snackbar>
         </Box>
-
     );
 };
+
+export default EmployeeDetail;

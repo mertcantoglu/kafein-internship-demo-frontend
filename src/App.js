@@ -10,8 +10,6 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AppRoutes />
     </QueryClientProvider>
-
-
   );
 }
 
