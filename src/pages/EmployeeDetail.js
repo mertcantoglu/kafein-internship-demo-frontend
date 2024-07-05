@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { fetchEmployee, fetchEmployeeLeaves } from '../helpers/API';
-import { Box, Paper, Typography } from '@mui/material';
+import { Box, Paper, Typography, Snackbar, Alert } from '@mui/material';
 import EmployeeActions from '../components/EmployeeActions';
 import EmployeeCard from '../components/EmployeeCard';
 import LeaveTable from '../components/LeaveTable';
@@ -17,9 +17,22 @@ const EmployeeDetail = () => {
         edit: false,
         delete: false,
     });
+    const [snackbarState, setSnackbarState] = useState({
+        open: false,
+        message: '',
+        severity: 'success',
+    });
 
     const handleDialogToggle = (type, state) => {
         setDialogState(prevState => ({ ...prevState, [type]: state }));
+    };
+
+    const handleSnackbarOpen = (message, severity) => {
+        setSnackbarState({ open: true, message, severity });
+    };
+
+    const handleSnackbarClose = () => {
+        setSnackbarState({ ...snackbarState, open: false });
     };
 
     const leavesQuery = useQuery({
@@ -45,24 +58,35 @@ const EmployeeDetail = () => {
                 <Typography variant="h6" component="div" gutterBottom>
                     Leaves
                 </Typography>
-                <LeaveTable leaves={leavesQuery.data} employeeId={employeeId} onDelete={handleDialogToggle} />
+                <LeaveTable leaves={leavesQuery.data} employeeId={employeeId} onDelete={handleDialogToggle} handleSnackbarOpen={handleSnackbarOpen} />
             </Paper>
             <AddRecordDialog
                 open={dialogState.record}
                 handleClose={() => handleDialogToggle('record', false)}
-                handleAddRecord={() => window.location.reload()}
                 employeeId={employeeQuery.data.id}
+                handleSnackbarOpen={handleSnackbarOpen}
             />
             <EmployeeEditForm
                 employeeProps={employeeQuery.data}
                 handleModalClose={() => handleDialogToggle('edit', false)}
                 open={dialogState.edit}
+                handleSnackbarOpen={handleSnackbarOpen}
             />
             <DeleteConfirmationDialog
                 open={dialogState.delete}
                 handleClose={() => handleDialogToggle('delete', false)}
                 employeeId={employeeQuery.data.id}
+                handleSnackbarOpen={handleSnackbarOpen}
             />
+            <Snackbar
+                open={snackbarState.open}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+            >
+                <Alert onClose={handleSnackbarClose} severity={snackbarState.severity} sx={{ width: '100%' }}>
+                    {snackbarState.message}
+                </Alert>
+            </Snackbar>
         </Box>
     );
 };

@@ -2,10 +2,7 @@ import React, { useState } from 'react';
 import { TextField, Button, Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions } from '@mui/material';
 import { updateEmployee } from '../helpers/API';
 
-
-
-function EmployeeEditForm({ handleModalClose, open, employeeProps }) {
-
+function EmployeeEditForm({ handleModalClose, open, employeeProps, handleSnackbarOpen }) {
 
     const modalStyle = {
         display: 'flex',
@@ -13,7 +10,6 @@ function EmployeeEditForm({ handleModalClose, open, employeeProps }) {
         justifyContent: 'center',
         height: '100vh',
         width: '100vw',
-
     };
 
     const fields = [
@@ -29,16 +25,16 @@ function EmployeeEditForm({ handleModalClose, open, employeeProps }) {
         const { name, value } = e.target;
         setEmployee({ ...employee, [name]: value });
     };
-    console.log(employee);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await updateEmployee(employee);
+            await updateEmployee(employee);
+            handleSnackbarOpen('Employee updated successfully', 'success');
             handleModalClose();
-            alert('Employee updated successfully');
         } catch (error) {
-            console.error('Error update employee:', error);
-            alert('Failed to update employee');
+            console.error('Error updating employee:', error);
+            handleSnackbarOpen(error.response?.data?.message || 'Failed to update employee', 'error');
         }
     };
 
@@ -51,40 +47,41 @@ function EmployeeEditForm({ handleModalClose, open, employeeProps }) {
         >
             <DialogTitle>Edit Employee</DialogTitle>
 
-            <DialogContentText
-                style={{
-                    marginLeft: 20,
-                }}>
-                To edit a employee please enter the required fields.
+            <DialogContentText style={{ marginLeft: 20 }}>
+                To edit an employee please enter the required fields.
             </DialogContentText>
 
-
-            <DialogContent
-                style={{
-                }
-                }>
+            <DialogContent>
                 <form onSubmit={handleSubmit}>
                     {fields.map(field => (
-                        <TextField name={field.name} label={field.label} defaultValue={employee[field.name]} onChange={handleChange} required fullWidth style={{ marginBottom: 10 }} />
-                    ))
-                    }
-                    <TextField 
-                    type='number'
-                    name='numDaysBreak' 
-                    label='Remaning Days: ' 
-                    defaultValue={employee['numDaysBreak']} 
-                    onChange={handleChange} 
-                    required 
-                    fullWidth
-                    style={{ marginBottom: 10 }}
-                    InputProps={{ inputProps : {min:0}}} />
-                    
+                        <TextField
+                            key={field.name}
+                            name={field.name}
+                            label={field.label}
+                            defaultValue={employee[field.name]}
+                            onChange={handleChange}
+                            required
+                            fullWidth
+                            style={{ marginBottom: 10 }}
+                        />
+                    ))}
+                    <TextField
+                        type='number'
+                        name='numDaysBreak'
+                        label='Remaining Days'
+                        defaultValue={employee['numDaysBreak']}
+                        onChange={handleChange}
+                        required
+                        fullWidth
+                        style={{ marginBottom: 10 }}
+                        InputProps={{ inputProps: { min: 0 } }}
+                    />
                 </form>
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleModalClose}>Cancel</Button>
                 <Button onClick={handleSubmit}>Edit</Button>
-      </DialogActions>
+            </DialogActions>
         </Dialog>
     );
 }
