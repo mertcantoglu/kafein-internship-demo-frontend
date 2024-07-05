@@ -7,10 +7,9 @@ import {
     Outlet,
 } from "react-router-dom";
 
-import Leaves from './pages/Leaves';
 import { Employee } from './pages/Employee';
 import { TopBar } from './components/TopBar';
-import { EmployeeDetail } from './pages/EmployeeDetail';
+import EmployeeDetail from './pages/EmployeeDetail';
 
 const pages = [
     { name: 'Employee', path: 'employee', element: <Employee /> },
@@ -24,11 +23,9 @@ function AppRoutes() {
             <Routes>
                 <Route index path="/" element={<Employee />} />
                 <Route path="*" element={<Navigate to='/' replace />} />
-
                
                 <Route index key='employee' path='employee' element={<Employee />} />
                 <Route path='/employee/:id' element = {<EmployeeDetail/>} />
-                
             </Routes>
         </Router>
     )

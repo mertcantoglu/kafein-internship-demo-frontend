@@ -12,8 +12,20 @@ import {
   IconButton,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { deleteLeaveRecord } from '../helpers/API';
 
-const LeaveTable = ({ leaves ,onDelete }) => {
+const handleDelete = async (id) => {
+  try {
+      const response = await deleteLeaveRecord(id);
+      alert('Record deleted successfully');
+  } catch (error) {
+      console.error('Error delete record:', error);
+      alert('Failed to delete record');
+  }
+};
+
+const LeaveTable = ({ leaves }) => {
+
   return (
     <TableContainer component={Paper} >
       <Table>
@@ -36,7 +48,7 @@ const LeaveTable = ({ leaves ,onDelete }) => {
               <TableCell>{new Date(leave.createdAt).toLocaleString()}</TableCell>
               <TableCell>{leave.dayDifference}</TableCell>
               <TableCell>
-                <IconButton onClick={() => (onDelete(leave.id))}>
+                <IconButton onClick={() => (handleDelete(leave.id))}>
                   <DeleteIcon/>
                 </IconButton>
               </TableCell>

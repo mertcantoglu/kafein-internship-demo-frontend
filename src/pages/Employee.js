@@ -16,8 +16,8 @@ export const Employee = () => {
         setModalOpen(false);
     }
 
-    const handleSearchChange = (event) => {
-        setSearchQuery(event.target.value);
+    const handleSearchChange = (e) => {
+        setSearchQuery(e.target.value);
     }
 
     return (
@@ -37,7 +37,6 @@ export const Employee = () => {
                     style={{ marginTop: 15, marginLeft: 15 }}
                 />
             </Box>
-
             <EmployeeList searchQuery={searchQuery} />
         </Box>
     )

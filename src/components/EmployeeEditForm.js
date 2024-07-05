@@ -3,6 +3,7 @@ import { TextField, Button, Dialog, DialogContent, DialogTitle, DialogContentTex
 import { updateEmployee } from '../helpers/API';
 
 
+
 function EmployeeEditForm({ handleModalClose, open, employeeProps }) {
 
 
@@ -28,7 +29,7 @@ function EmployeeEditForm({ handleModalClose, open, employeeProps }) {
         const { name, value } = e.target;
         setEmployee({ ...employee, [name]: value });
     };
-
+    console.log(employee);
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -67,6 +68,17 @@ function EmployeeEditForm({ handleModalClose, open, employeeProps }) {
                         <TextField name={field.name} label={field.label} defaultValue={employee[field.name]} onChange={handleChange} required fullWidth style={{ marginBottom: 10 }} />
                     ))
                     }
+                    <TextField 
+                    type='number'
+                    name='numDaysBreak' 
+                    label='Remaning Days: ' 
+                    defaultValue={employee['numDaysBreak']} 
+                    onChange={handleChange} 
+                    required 
+                    fullWidth
+                    style={{ marginBottom: 10 }}
+                    InputProps={{ inputProps : {min:0}}} />
+                    
                 </form>
             </DialogContent>
             <DialogActions>
