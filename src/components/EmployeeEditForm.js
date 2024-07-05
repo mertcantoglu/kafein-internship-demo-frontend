@@ -2,15 +2,7 @@ import React, { useState } from 'react';
 import { TextField, Button, Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions } from '@mui/material';
 import { updateEmployee } from '../helpers/API';
 
-function EmployeeEditForm({ handleModalClose, open, employeeProps, handleSnackbarOpen }) {
-
-    const modalStyle = {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        height: '100vh',
-        width: '100vw',
-    };
+function EmployeeEditForm({ handleModalClose, open, employeeProps, handleSnackbarOpen, refetchData }) {
 
     const fields = [
         { name: 'firstName', label: 'First Name' },
@@ -31,6 +23,7 @@ function EmployeeEditForm({ handleModalClose, open, employeeProps, handleSnackba
         try {
             await updateEmployee(employee);
             handleSnackbarOpen('Employee updated successfully', 'success');
+            refetchData();
             handleModalClose();
         } catch (error) {
             console.error('Error updating employee:', error);
@@ -42,8 +35,6 @@ function EmployeeEditForm({ handleModalClose, open, employeeProps, handleSnackba
         <Dialog
             open={open}
             onClose={handleModalClose}
-            style={modalStyle}
-            hideBackdrop
         >
             <DialogTitle>Edit Employee</DialogTitle>
 

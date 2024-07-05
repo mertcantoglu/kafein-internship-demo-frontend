@@ -11,7 +11,7 @@ import {
 import { addLeaveRecord } from '../helpers/API';
 import dayjs from 'dayjs';
 
-const AddRecordDialog = ({ open, handleClose,  employeeId, handleSnackbarOpen }) => {
+const AddRecordDialog = ({ open, handleClose, employeeId, handleSnackbarOpen, refetchData }) => {
     const [leaveDay, setLeaveDay] = useState('');
     const [returnDay, setReturnDay] = useState('');
     const [reason, setReason] = useState('');
@@ -23,6 +23,7 @@ const AddRecordDialog = ({ open, handleClose,  employeeId, handleSnackbarOpen })
         try {
             await addLeaveRecord(newRecord);
             handleSnackbarOpen('Leave record added successfully', 'success');
+            refetchData();
             handleClose();
         } catch (error) {
             console.error('Error adding new record:', error);

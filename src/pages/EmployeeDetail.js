@@ -9,6 +9,7 @@ import LeaveTable from '../components/LeaveTable';
 import AddRecordDialog from '../components/LeaveForm';
 import EmployeeEditForm from '../components/EmployeeEditForm';
 import DeleteConfirmationDialog from '../components/EmployeeDeleteConfirm';
+import EmployeeNotFound from '../components/EmployeeNotFound';
 
 const EmployeeDetail = () => {
     const { id: employeeId } = useParams();
@@ -45,8 +46,13 @@ const EmployeeDetail = () => {
         queryFn: () => fetchEmployee(employeeId),
     });
 
+    const refetchData = () => {
+        leavesQuery.refetch();
+        employeeQuery.refetch();
+    };
+
     if (leavesQuery.isLoading || employeeQuery.isLoading) return <div>Loading...</div>;
-    if (leavesQuery.error || employeeQuery.error) return <div>Error: {employeeQuery.message}</div>;
+    if (leavesQuery.error || employeeQuery.error) return <EmployeeNotFound />;
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2 }}>
@@ -58,25 +64,28 @@ const EmployeeDetail = () => {
                 <Typography variant="h6" component="div" gutterBottom>
                     Leaves
                 </Typography>
-                <LeaveTable leaves={leavesQuery.data} employeeId={employeeId} onDelete={handleDialogToggle} handleSnackbarOpen={handleSnackbarOpen} />
+                <LeaveTable leaves={leavesQuery.data} employeeId={employeeId} handleSnackbarOpen={handleSnackbarOpen} refetchData={refetchData} />
             </Paper>
             <AddRecordDialog
                 open={dialogState.record}
                 handleClose={() => handleDialogToggle('record', false)}
                 employeeId={employeeQuery.data.id}
                 handleSnackbarOpen={handleSnackbarOpen}
+                refetchData={refetchData}
             />
             <EmployeeEditForm
                 employeeProps={employeeQuery.data}
                 handleModalClose={() => handleDialogToggle('edit', false)}
                 open={dialogState.edit}
                 handleSnackbarOpen={handleSnackbarOpen}
+                refetchData={refetchData}
             />
             <DeleteConfirmationDialog
                 open={dialogState.delete}
                 handleClose={() => handleDialogToggle('delete', false)}
                 employeeId={employeeQuery.data.id}
                 handleSnackbarOpen={handleSnackbarOpen}
+                refetchData={refetchData}
             />
             <Snackbar
                 open={snackbarState.open}

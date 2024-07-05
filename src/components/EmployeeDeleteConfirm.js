@@ -9,8 +9,10 @@ import {
     TextField,
 } from '@mui/material';
 import { deleteEmployee } from '../helpers/API';
+import { useNavigate } from 'react-router-dom';
 
-const DeleteConfirmationDialog = ({ open, handleClose, employeeId, handleSnackbarOpen }) => {
+const DeleteConfirmationDialog = ({ open, handleClose, employeeId, handleSnackbarOpen, refetchData }) => {
+    const navigate = useNavigate();
     const [confirmation, setConfirmation] = useState('');
 
     const handleSubmit = async () => {
@@ -22,6 +24,7 @@ const DeleteConfirmationDialog = ({ open, handleClose, employeeId, handleSnackba
         try {
             await deleteEmployee(employeeId);
             handleSnackbarOpen('Employee deleted successfully', 'success');
+            navigate('/employees');
             handleClose();
         } catch (error) {
             console.error('Error deleting employee:', error);

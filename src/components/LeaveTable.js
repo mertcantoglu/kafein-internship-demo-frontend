@@ -12,12 +12,13 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteLeaveRecord } from '../helpers/API';
 
-const LeaveTable = ({ leaves, onDelete, handleSnackbarOpen }) => {
+const LeaveTable = ({ leaves, handleSnackbarOpen , refetchData}) => {
     const handleDelete = async (id) => {
         try {
             await deleteLeaveRecord(id);
             handleSnackbarOpen('Record deleted successfully', 'success');
-            onDelete('delete', true);
+            refetchData();
+            
         } catch (error) {
             console.error('Error deleting record:', error);
             handleSnackbarOpen(error.response?.data?.message || 'Failed to delete record', 'error');
