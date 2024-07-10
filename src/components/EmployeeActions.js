@@ -3,12 +3,12 @@ import { Box, Button } from '@mui/material';
 
 const EmployeeActions = ({ handleDialogToggle }) => {
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, alignItems: 'center' }}>
             <Button
                 variant="contained"
                 color="error"
                 onClick={() => handleDialogToggle('delete', true)}
-                style={{ width: 150, height: 100, alignSelf: 'center', marginRight: 30 }}
+                sx={{ width: { xs: '100%', md: 150 }, height: { xs: 50, md: 100 }, marginBottom: { xs: 2, md: 0 }, marginRight: { md: 2 } }}
             >
                 Delete Employee
             </Button>
@@ -16,7 +16,7 @@ const EmployeeActions = ({ handleDialogToggle }) => {
                 variant="contained"
                 color="secondary"
                 onClick={() => handleDialogToggle('edit', true)}
-                style={{ width: 150, height: 100, alignSelf: 'center', marginRight: 30 }}
+                sx={{ width: { xs: '100%', md: 150 }, height: { xs: 50, md: 100 }, marginBottom: { xs: 2, md: 0 }, marginRight: { md: 2 } }}
             >
                 Edit Employee
             </Button>
@@ -24,7 +24,7 @@ const EmployeeActions = ({ handleDialogToggle }) => {
                 variant="contained"
                 color="primary"
                 onClick={() => handleDialogToggle('record', true)}
-                style={{ width: 150, height: 100, alignSelf: 'center' }}
+                sx={{ width: { xs: '100%', md: 150 }, height: { xs: 50, md: 100 } }}
             >
                 New Record
             </Button>

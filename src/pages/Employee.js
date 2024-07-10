@@ -40,13 +40,13 @@ export const Employee = () => {
     };
 
     return (
-        <Box>
-            <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', flexWrap: 'wrap', width: '100%', maxWidth: 800 }}>
                 <Button
                     onClick={handleModalOpen}
                     variant="contained"
                     color="primary"
-                    style={{ marginTop: 15, marginLeft: 15 }}
+                    sx={{ margin: 1 }}
                 >
                     Add Employee
                 </Button>
@@ -63,7 +63,7 @@ export const Employee = () => {
                     variant="outlined"
                     value={searchQuery}
                     onChange={handleSearchChange}
-                    style={{ marginTop: 15, marginLeft: 15 }}
+                    sx={{ margin: 1, flexGrow: 1 }}
                 />
             </Box>
             <EmployeeList searchQuery={searchQuery} />

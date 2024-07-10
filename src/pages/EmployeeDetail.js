@@ -56,11 +56,11 @@ const EmployeeDetail = () => {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '80%', marginBottom: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, justifyContent: 'space-between', width: '100%', marginBottom: 2 }}>
                 <EmployeeCard employee={employeeQuery.data} />
                 <EmployeeActions handleDialogToggle={handleDialogToggle} />
             </Box>
-            <Paper elevation={3} sx={{ width: '80%', padding: 2 }}>
+            <Paper elevation={3} sx={{ width: '100%', padding: 2 }}>
                 <Typography variant="h6" component="div" gutterBottom>
                     Leaves
                 </Typography>
