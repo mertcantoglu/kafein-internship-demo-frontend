@@ -22,7 +22,7 @@ function EmployeeList({ searchQuery }) {
   if (error) return <div>Error: {error.message}</div>;
 
   return (
-    <Box sx={{ width: '80%', margin: 2 }}>
+    <Box sx={{ width: '100%', maxWidth: 800, margin: 'auto'}}>
       {filteredEmployees?.length === 0 ? (
         <Typography variant="h6" sx={{ margin: 2 }}>
           No employees found.

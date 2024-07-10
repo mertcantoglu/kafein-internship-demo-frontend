@@ -19,23 +19,23 @@ export const TopBar = ({ pages, user }) => {
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
-                <Toolbar>
-                    <Box sx={{ display: 'flex', flexGrow: 1 }}>
+                <Toolbar sx={{ flexWrap: 'nowrap', justifyContent: 'space-between' }}>
+                    <Box sx={{ display: 'flex', flexGrow: 1, flexShrink: 1, overflowX: 'auto' }}>
                         {pages.map((page) => (
                             <MenuItem key={page.name} onClick={() => navigate(page.path)}>
-                                <Typography textAlign="center" variant="h6">
+                                <Typography textAlign="center" variant="h6" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
                                     {page.name}
                                 </Typography>
                             </MenuItem>
                         ))}
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Typography variant="h7" sx={{ marginRight: 2 }}>
+                        <Typography variant="h6" sx={{ marginRight: 2, fontSize: { xs: '0.875rem', sm: '1rem' } }}>
                             {user.fullName}
                         </Typography>
                         <MenuItem onClick={logOut}>
-                            <Typography textAlign="center" variant="h7">
-                                Logout
+                            <Typography textAlign="center" variant="h6" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
+                                Sign Out
                             </Typography>
                         </MenuItem>
                     </Box>

@@ -3,7 +3,7 @@ import axios from 'axios';
 import SessionHelper from './SessionHelper';
 
 const api = axios.create({
-  baseURL: 'http://localhost:8080/api', // BASE URL
+  baseURL: 'http://192.168.0.47:8080/api', // BASE URL
   headers: {
     'Content-Type': 'application/json',
   },
