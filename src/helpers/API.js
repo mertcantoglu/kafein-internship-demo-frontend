@@ -1,8 +1,20 @@
 
 import axios from 'axios';
+import SessionHelper from './SessionHelper';
 
 const api = axios.create({
   baseURL: 'http://localhost:8080/api', // BASE URL
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+api.interceptors.request.use((config) => {
+  const user = SessionHelper.getUser();
+  if (user?.token) {
+    config.headers.Authorization = `Bearer ${user.token}`;
+  }
+  return config;
 });
 
 export const fetchEmployees = async () => {
@@ -44,6 +56,12 @@ export const updateEmployee = async (employee) => {
 export const deleteEmployee = async (id) => {
     const response = await api.delete(`/employees/${id}`);
     return response.data;
+  };
+
+export const login = async (credentials) => {
+    const response = await api.post('/auth/login', credentials);
+    return response.data;
   }
+
 
 

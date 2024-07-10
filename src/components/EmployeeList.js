@@ -37,7 +37,7 @@ function EmployeeList({ searchQuery }) {
                   secondary={`Department: ${employee.department} - Remaining Days: ${employee.numDaysBreak}`}
                 />
                 <ListItemSecondaryAction>
-                  <IconButton edge="end" aria-label="details" onClick={() => navigate(`/employee/${employee.id}`)}>
+                  <IconButton edge="end" aria-label="details" onClick={() => navigate(`/employee/${employee.id}` , {replace:true})}>
                     <ChevronRight />
                   </IconButton>
                 </ListItemSecondaryAction>
