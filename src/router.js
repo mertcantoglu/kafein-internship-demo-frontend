@@ -13,18 +13,19 @@ import EmployeeDetail from './pages/EmployeeDetail';
 import LoginPage from './pages/Login';
 import SessionHelper from './helpers/SessionHelper';
 
+import Users from './pages/Users'; 
 
-const pages = [
-    { name: 'Employee', path: 'employee', element: <Employee /> },
+const protoctedPages = [
+    { name: 'Employee', path: 'employee', element: <Employee /> , roles: ['ADMIN', 'USER'] },
+    { name: 'Users', path: 'users', element: <Users /> , roles : ['ADMIN']},
 ];
 
-
-const ProtectedRoute = ({ element }) => {
+const ProtectedRoute = ({ element , roles }) => {
     const user = SessionHelper.getUser();
-    return user ? element : <Navigate to='/' replace />;
-  };
-
-
+    if (!user) return <Navigate to='/' replace />;
+    if (roles && !roles.includes(user.role)) return <Navigate to='/employee' replace />;
+    return element;
+};
 
 
 function AppRoutes() {
@@ -32,16 +33,19 @@ function AppRoutes() {
 
     return (
         <Router>
-            {user && <TopBar pages = {pages} user = {user} />}
+            {user && <TopBar pages = {protoctedPages} user = {user} />}
             <Routes>
                 <Route index path="/" element={<LoginPage />} />
                 <Route path="*" element={<Navigate to='/' replace />} />
                 <Route key='employee' path='employee' element={<ProtectedRoute element={<Employee />} />} />
                 <Route path='/employee/:id' element={<ProtectedRoute element={<EmployeeDetail />} />} />
-
+                {protoctedPages.map((page) => (
+                    <Route key={page.name} path={page.path} element={<ProtectedRoute element={page.element} roles={page.roles} />} />
+                ))
+                }
             </Routes>
         </Router>
-    )
+    );
 }
 
-export default AppRoutes
+export default AppRoutes;
