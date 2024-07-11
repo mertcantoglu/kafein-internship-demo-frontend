@@ -3,7 +3,7 @@ import axios from 'axios';
 import SessionHelper from './SessionHelper';
 
 const api = axios.create({
-  baseURL: 'http://192.168.0.47:8080/api', // BASE URL
+  baseURL: 'http://localhost:8080/api', // BASE URL
   headers: {
     'Content-Type': 'application/json',
   },
@@ -16,6 +16,17 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
+
+api.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response && error.response.status === 403) {
+      SessionHelper.deleteUser(); // Clear session
+      window.location.href = '/'; // Redirect to sign-in page
+    }
+    return Promise.reject(error);
+  }
+);
 
 export const fetchEmployees = async () => {
   const response = await api.get('/employees');
@@ -62,6 +73,21 @@ export const login = async (credentials) => {
     const response = await api.post('/auth/login', credentials);
     return response.data;
   }
+
+export const fetchUsers = async () => {
+  const response = await api.get('/auth/users');
+  return response.data;
+};
+
+export const addUser = async (user) => {
+  const response = await api.post('/auth/register', user);
+  return response.data;
+}
+
+export const deleteUser = async (id) => {
+  const response = await api.delete(`/auth/users/${id}`);
+  return response.data;
+}
 
 
 

@@ -16,12 +16,15 @@ export const TopBar = ({ pages, user }) => {
         window.location.reload();
     };
 
+
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar position="static">
                 <Toolbar sx={{ flexWrap: 'nowrap', justifyContent: 'space-between' }}>
                     <Box sx={{ display: 'flex', flexGrow: 1, flexShrink: 1, overflowX: 'auto' }}>
-                        {pages.map((page) => (
+                        {pages.filter(page =>
+                            page.roles.includes(user.role)
+                        ).map((page) => (
                             <MenuItem key={page.name} onClick={() => navigate(page.path)}>
                                 <Typography textAlign="center" variant="h6" sx={{ fontSize: { xs: '0.875rem', sm: '1rem' } }}>
                                     {page.name}
