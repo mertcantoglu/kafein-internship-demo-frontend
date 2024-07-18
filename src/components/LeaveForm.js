@@ -12,8 +12,24 @@ import {
 } from '@mui/material';
 import { addLeaveRecord } from '../helpers/API';
 import dayjs from 'dayjs';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-const AddRecordDialog = ({ open, handleClose, employeeId, handleSnackbarOpen, refetchData }) => {
+const AddRecordDialog = ({ open, handleClose, handleSnackbarOpen }) => {
+
+    const queryClient = useQueryClient();
+
+    const mutationAdd = useMutation({
+        mutationFn: addLeaveRecord,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['employee']);
+            handleSnackbarOpen('Leave request added successfully', 'success');
+            handleClose();
+        },
+        onError: (error) => {
+            handleSnackbarOpen(`Failed to add request: ${error.response?.data.message}`, 'error');
+        }
+    });
+
     const [leaveRecord, setLeaveRecord] = useState({
         leaveDay: '',
         returnDay: '',
@@ -37,18 +53,12 @@ const AddRecordDialog = ({ open, handleClose, employeeId, handleSnackbarOpen, re
             ...leaveRecord,
             leaveDay: formattedLeaveDay,
             returnDay: formattedReturnDay,
-            id: employeeId
         };
-        try {
-            await addLeaveRecord(newRecord);
-            handleSnackbarOpen('Leave record added successfully', 'success');
-            refetchData();
-            handleClose();
-        } catch (error) {
-            console.error('Error adding new record:', error);
-            handleSnackbarOpen(error.response?.data?.message || 'Failed to add leave record', 'error');
-        }
+        
+        mutationAdd.mutate(newRecord);
     };
+
+    
 
     return (
         <Dialog open={open} onClose={handleClose}>

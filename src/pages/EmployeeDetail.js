@@ -36,23 +36,17 @@ const EmployeeDetail = () => {
         setSnackbarState({ ...snackbarState, open: false });
     };
 
-    const leavesQuery = useQuery({
-        queryKey: ['employeesLeaves', employeeId],
-        queryFn: () => fetchEmployeeLeaves(employeeId),
-    });
-
     const employeeQuery = useQuery({
         queryKey: ['employee', employeeId],
         queryFn: () => fetchEmployee(employeeId),
     });
 
     const refetchData = () => {
-        leavesQuery.refetch();
         employeeQuery.refetch();
     };
 
-    if (leavesQuery.isLoading || employeeQuery.isLoading) return <div>Loading...</div>;
-    if (leavesQuery.error || employeeQuery.error) return <EmployeeNotFound />;
+    if (employeeQuery.isLoading) return <div>Loading...</div>;
+    if (employeeQuery.error) return <EmployeeNotFound />;
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2 }}>
@@ -64,7 +58,7 @@ const EmployeeDetail = () => {
                 <Typography variant="h6" component="div" gutterBottom>
                     Leaves
                 </Typography>
-                <LeaveTable leaves={leavesQuery.data} employeeId={employeeId} handleSnackbarOpen={handleSnackbarOpen} refetchData={refetchData} />
+                <LeaveTable leaves={employeeQuery.data.leaves} employeeId={employeeId} handleSnackbarOpen={handleSnackbarOpen} refetchData={refetchData} />
             </Paper>
             <AddRecordDialog
                 open={dialogState.record}

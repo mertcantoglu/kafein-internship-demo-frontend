@@ -55,7 +55,7 @@ export const deleteLeaveRecord = async (id) => {
   };
 
 export const addEmployee = async (employee) => {
-    const response = await api.post('/employees', employee);
+    const response = await api.post('/auth/register', employee);
     return response.data;
   };
 
@@ -86,6 +86,22 @@ export const addUser = async (user) => {
 
 export const deleteUser = async (id) => {
   const response = await api.delete(`/auth/users/${id}`);
+  return response.data;
+}
+
+export const leaveApprove = async (id) => {
+  const body = {
+    status: 'APPROVE'
+  }
+  const response = await api.put(`/leaves/${id}/status` , body);
+  return response.data;
+}
+
+export const leaveReject = async (id) => {
+  const body = {
+    status: 'REJECT'
+  }
+  const response = await api.put(`/leaves/${id}/status`,body);
   return response.data;
 }
 

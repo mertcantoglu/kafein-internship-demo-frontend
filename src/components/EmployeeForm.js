@@ -7,14 +7,16 @@ function EmployeeForm({ handleModalClose, open, handleSnackbarOpen, refetchData 
         { name: 'firstName', label: 'First Name' },
         { name: 'lastName', label: 'Last Name' },
         { name: 'email', label: 'Email' },
-        { name: 'department', label: 'Department' }
+        { name: 'department', label: 'Department' },
     ];
 
     const [employee, setEmployee] = useState({
         firstName: '',
         lastName: '',
         email: '',
-        department: ''
+        password: '',
+        department: '',
+        role: 'EMPLOYEE'
     });
 
     const handleChange = (e) => {
@@ -54,6 +56,18 @@ function EmployeeForm({ handleModalClose, open, handleSnackbarOpen, refetchData 
                             style={{ marginBottom: 10 }}
                         />
                     ))}
+                    <TextField
+                            key='password'
+                            name='password'
+                            label='Password'
+                            onChange={handleChange}
+                            type='password'
+                            password
+                            fullWidth
+                            required
+                            style={{ marginBottom: 10 }}
+                        />
+
                 </form>
             </DialogContent>
             <DialogActions>
