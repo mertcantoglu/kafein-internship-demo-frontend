@@ -40,7 +40,7 @@ const LeaveRequest = () => {
 
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: 2 }}>
-            <Box sx={{ display: 'flex', flex: '', backgroundColor: 'red', width: '100%' }}>
+            <Box sx={{ display: 'flex', flex: '',  width: '100%' }}>
                 <EmployeeCard employee={employeeQuery.data[0]} />
                 <Button variant="contained" color="primary" sx={{ margin: 1 }} onClick={() => handleDialogToggle(true)}>
                     Request Leave

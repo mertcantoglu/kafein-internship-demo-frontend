@@ -12,47 +12,13 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import BlockIcon from '@mui/icons-material/Block';
-import { deleteLeaveRecord, leaveApprove, leaveReject } from '../helpers/API';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import useLeaveMutations from '../hooks/useLeaveMutations';
 
 
 
 const LeaveTable = ({ leaves, handleSnackbarOpen }) => {
 
-    const queryClient = useQueryClient();
-
-    const mutationDelete = useMutation({
-        mutationFn: deleteLeaveRecord,
-        onSuccess: () => {
-            queryClient.invalidateQueries(['employee']);
-            handleSnackbarOpen('Leave request deleted successfully', 'success');
-        },
-        onError: (error) => {
-            handleSnackbarOpen(`Failed to delete request: ${error.response?.data.message}`, 'error');
-        }
-    });
-
-    const mutationApprove = useMutation({
-        mutationFn: leaveApprove,
-        onSuccess: () => {
-            queryClient.invalidateQueries(['employee']);
-            handleSnackbarOpen('Leave request approved successfully', 'success');
-        },
-        onError: (error) => {
-            handleSnackbarOpen(`Failed to approve request: ${error.response?.data.message}`, 'error');
-        }
-    });
-
-    const mutationReject = useMutation({
-        mutationFn: leaveReject,
-        onSuccess: () => {
-            queryClient.invalidateQueries(['employee']);
-            handleSnackbarOpen('Leave request rejected successfully', 'success');
-        },
-        onError: (error) => {
-            handleSnackbarOpen(`Failed to reject request: ${error.response?.data.message}`, 'error');
-        }
-    });
+   const { mutationDelete, mutationApprove, mutationReject } = useLeaveMutations(handleSnackbarOpen);
 
     const renderActions = (leave) => {
         switch (leave.status) {

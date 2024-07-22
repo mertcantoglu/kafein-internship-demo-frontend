@@ -66,7 +66,9 @@ export const Employee = () => {
                     sx={{ margin: 1, flexGrow: 1 }}
                 />
             </Box>
+
             <EmployeeList searchQuery={searchQuery} />
+            
             <Snackbar
                 open={snackbarState.open}
                 autoHideDuration={6000}

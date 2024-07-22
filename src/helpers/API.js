@@ -105,5 +105,14 @@ export const leaveReject = async (id) => {
   return response.data;
 }
 
+export const fetchPendingRequests = async () => {
+  const response = await api.get('/employees', {
+    params: {
+      status: 'PENDING'
+    }
+  });
+  return response.data;
+}
+
 
 

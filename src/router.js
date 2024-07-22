@@ -17,9 +17,11 @@ import Users from './pages/Users';
 import LeaveRequest from './pages/LeaveRequest';
 import AccessDenied from './pages/AccessDenied';
 import PageNotFound from './pages/PageNotFound';
+import { PendingRequsts } from './pages/PendingRequsts';
 
 const protoctedPages = [
     { name: 'Employee', path: 'employee', element: <Employee /> , roles: ['ADMIN', 'USER'] },
+    { name: 'Pending Requests', path: 'pending', element: <PendingRequsts /> , roles: ['ADMIN', 'USER'] },
     { name: 'Users', path: 'users', element: <Users /> , roles : ['ADMIN']},
     { name : 'Leave Request' , path: 'request' , element: <LeaveRequest /> , roles : ['EMPLOYEE'] }
 ];
