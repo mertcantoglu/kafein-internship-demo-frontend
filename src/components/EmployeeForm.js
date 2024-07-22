@@ -1,8 +1,12 @@
 import React, { useState } from 'react';
 import { TextField, Button, Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions } from '@mui/material';
 import { addEmployee } from '../helpers/API';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-function EmployeeForm({ handleModalClose, open, handleSnackbarOpen, refetchData }) {
+function EmployeeForm({ handleModalClose, open, handleSnackbarOpen}) {
+
+    const queryClient = useQueryClient();
+
     const fields = [
         { name: 'firstName', label: 'First Name' },
         { name: 'lastName', label: 'Last Name' },
@@ -24,18 +28,18 @@ function EmployeeForm({ handleModalClose, open, handleSnackbarOpen, refetchData 
         setEmployee({ ...employee, [name]: value });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            await addEmployee(employee);
+    const mutationSubmit= useMutation({
+        mutationFn: addEmployee,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['employees']);
             handleSnackbarOpen('Employee added successfully', 'success');
-            refetchData();
             handleModalClose();
-        } catch (error) {
-            console.error('Error adding employee:', error);
-            handleSnackbarOpen('Failed to add employee', 'error');
+        },
+        onError: (error) => {
+            handleSnackbarOpen(`Failed to add employee: ${error.response?.data.message}`, 'error');
         }
-    };
+    });
+
 
     return (
         <Dialog open={open} onClose={handleModalClose}>
@@ -44,7 +48,7 @@ function EmployeeForm({ handleModalClose, open, handleSnackbarOpen, refetchData 
                 To create a new opportunity please enter the required fields.
             </DialogContentText>
             <DialogContent>
-                <form onSubmit={handleSubmit}>
+                <form>
                     {fields.map(field => (
                         <TextField
                             key={field.name}
@@ -72,7 +76,7 @@ function EmployeeForm({ handleModalClose, open, handleSnackbarOpen, refetchData 
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleModalClose}>Cancel</Button>
-                <Button onClick={handleSubmit}>Add</Button>
+                <Button onClick={() => mutationSubmit.mutate(employee)}>Add</Button>
             </DialogActions>
         </Dialog>
     );

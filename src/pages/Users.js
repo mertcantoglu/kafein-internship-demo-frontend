@@ -4,15 +4,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Add, Delete } from '@mui/icons-material';
 import { fetchUsers, addUser, deleteUser } from '../helpers/API';
 import UserAddModal from '../components/UserAddModal';
+import LoadingPage from './LoadingPage';
+import useSnackbar from '../hooks/useSnackbar';
 
 const Users = () => {
     const [newUser, setNewUser] = useState({ firstName: '', lastName: '', email: '', password: '' });
     const [open, setOpen] = useState(false);
-    const [snackbarState, setSnackbarState] = useState({
-        open: false,
-        message: '',
-        severity: 'success',
-    });
+    const { snackbarState, handleSnackbarOpen, handleSnackbarClose } = useSnackbar();
     const queryClient = useQueryClient();
 
     const { data: users, error, isLoading } = useQuery({
@@ -52,13 +50,6 @@ const Users = () => {
         mutationDelete.mutate(id);
     };
 
-    const handleSnackbarOpen = (message, severity) => {
-        setSnackbarState({ open: true, message, severity });
-    };
-
-    const handleSnackbarClose = () => {
-        setSnackbarState({ ...snackbarState, open: false });
-    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -74,7 +65,7 @@ const Users = () => {
         setNewUser({ firstName: '', lastName: '', email: '', password: '' });
     };
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <LoadingPage/>;
     if (error) return <div>Error: {error.message}</div>;
 
     return (

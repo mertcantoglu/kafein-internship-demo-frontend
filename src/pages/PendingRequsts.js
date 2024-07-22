@@ -7,6 +7,7 @@ import { Alert, Box, Snackbar } from '@mui/material';
 import useSnackbar from '../hooks/useSnackbar';
 import SnackbarCompenent from '../components/SnackbarCompenent';
 import useLeaveMutations from '../hooks/useLeaveMutations';
+import LoadingPage from './LoadingPage';
 
 export const PendingRequsts = () => {
 
@@ -21,7 +22,7 @@ export const PendingRequsts = () => {
 
 
 
-    if (pendingRequests.isLoading) return <div>Loading...</div>;
+    if (pendingRequests.isLoading) return <LoadingPage/>;
     if (pendingRequests.error) return <div >Error</div>;
 
     
@@ -36,8 +37,6 @@ export const PendingRequsts = () => {
                     onDelete={mutationDelete}
                     onApprove={mutationApprove}
                     onReject={mutationReject}
-                    handleSnackbarOpen={handleSnackbarOpen}
-
                 />
             ))}
 

@@ -20,14 +20,6 @@ const EmployeeActions = ({ handleDialogToggle }) => {
             >
                 Edit Employee
             </Button>
-            <Button
-                variant="contained"
-                color="primary"
-                onClick={() => handleDialogToggle('record', true)}
-                sx={{ width: { xs: '100%', md: 150 }, height: { xs: 50, md: 100 } }}
-            >
-                New Record
-            </Button>
         </Box>
     );
 };

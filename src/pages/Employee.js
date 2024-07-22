@@ -3,17 +3,14 @@ import EmployeeList from '../components/EmployeeList';
 import EmployeeForm from '../components/EmployeeForm';
 import { Box, Button, TextField, Snackbar, Alert } from '@mui/material';
 import { useQueryClient } from '@tanstack/react-query';
+import useSnackbar from '../hooks/useSnackbar';
+import SnackbarCompenent from '../components/SnackbarCompenent';
 
 export const Employee = () => {
     const [modalOpen, setModalOpen] = React.useState(false);
     const [searchQuery, setSearchQuery] = React.useState('');
-    const [snackbarState, setSnackbarState] = React.useState({
-        open: false,
-        message: '',
-        severity: 'success',
-    });
+    const { snackbarState, handleSnackbarOpen, handleSnackbarClose } = useSnackbar();
 
-    const queryClient = useQueryClient();
 
     const handleModalOpen = () => {
         setModalOpen(true);
@@ -25,18 +22,6 @@ export const Employee = () => {
 
     const handleSearchChange = (e) => {
         setSearchQuery(e.target.value);
-    };
-
-    const handleSnackbarOpen = (message, severity) => {
-        setSnackbarState({ open: true, message, severity });
-    };
-
-    const handleSnackbarClose = () => {
-        setSnackbarState({ ...snackbarState, open: false });
-    };
-
-    const refetchData = () => {
-        queryClient.invalidateQueries(['employees']);
     };
 
     return (
@@ -55,7 +40,6 @@ export const Employee = () => {
                         handleModalClose={handleModalClose}
                         open={modalOpen}
                         handleSnackbarOpen={handleSnackbarOpen}
-                        refetchData={refetchData}
                     />
                 )}
                 <TextField
@@ -68,16 +52,8 @@ export const Employee = () => {
             </Box>
 
             <EmployeeList searchQuery={searchQuery} />
-            
-            <Snackbar
-                open={snackbarState.open}
-                autoHideDuration={6000}
-                onClose={handleSnackbarClose}
-            >
-                <Alert onClose={handleSnackbarClose} severity={snackbarState.severity} sx={{ width: '100%' }}>
-                    {snackbarState.message}
-                </Alert>
-            </Snackbar>
+
+            <SnackbarCompenent snackbarState={snackbarState} handleSnackbarClose={handleSnackbarClose} />
         </Box>
     );
 };

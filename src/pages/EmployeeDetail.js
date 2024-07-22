@@ -10,42 +10,33 @@ import AddRecordDialog from '../components/LeaveForm';
 import EmployeeEditForm from '../components/EmployeeEditForm';
 import DeleteConfirmationDialog from '../components/EmployeeDeleteConfirm';
 import EmployeeNotFound from '../components/EmployeeNotFound';
+import useSnackbar from '../hooks/useSnackbar';
+import SnackbarCompenent from '../components/SnackbarCompenent';
+import LoadingPage from './LoadingPage';
 
 const EmployeeDetail = () => {
     const { id: employeeId } = useParams();
+
     const [dialogState, setDialogState] = useState({
-        record: false,
         edit: false,
         delete: false,
     });
-    const [snackbarState, setSnackbarState] = useState({
-        open: false,
-        message: '',
-        severity: 'success',
-    });
+
+    const { snackbarState, handleSnackbarOpen, handleSnackbarClose } = useSnackbar();
+    
 
     const handleDialogToggle = (type, state) => {
         setDialogState(prevState => ({ ...prevState, [type]: state }));
     };
 
-    const handleSnackbarOpen = (message, severity) => {
-        setSnackbarState({ open: true, message, severity });
-    };
-
-    const handleSnackbarClose = () => {
-        setSnackbarState({ ...snackbarState, open: false });
-    };
 
     const employeeQuery = useQuery({
         queryKey: ['employee', employeeId],
         queryFn: () => fetchEmployee(employeeId),
     });
 
-    const refetchData = () => {
-        employeeQuery.refetch();
-    };
 
-    if (employeeQuery.isLoading) return <div>Loading...</div>;
+    if (employeeQuery.isLoading) return <LoadingPage/>;
     if (employeeQuery.error) return <EmployeeNotFound />;
 
     return (
@@ -58,38 +49,24 @@ const EmployeeDetail = () => {
                 <Typography variant="h6" component="div" gutterBottom>
                     Leaves
                 </Typography>
-                <LeaveTable leaves={employeeQuery.data.leaves} employeeId={employeeId} handleSnackbarOpen={handleSnackbarOpen} refetchData={refetchData} />
+                <LeaveTable leaves={employeeQuery.data.leaves} employeeId={employeeId} handleSnackbarOpen={handleSnackbarOpen}/>
             </Paper>
-            <AddRecordDialog
-                open={dialogState.record}
-                handleClose={() => handleDialogToggle('record', false)}
-                employeeId={employeeQuery.data.id}
-                handleSnackbarOpen={handleSnackbarOpen}
-                refetchData={refetchData}
-            />
+
             <EmployeeEditForm
                 employeeProps={employeeQuery.data}
                 handleModalClose={() => handleDialogToggle('edit', false)}
                 open={dialogState.edit}
                 handleSnackbarOpen={handleSnackbarOpen}
-                refetchData={refetchData}
             />
             <DeleteConfirmationDialog
                 open={dialogState.delete}
                 handleClose={() => handleDialogToggle('delete', false)}
                 employeeId={employeeQuery.data.id}
                 handleSnackbarOpen={handleSnackbarOpen}
-                refetchData={refetchData}
             />
-            <Snackbar
-                open={snackbarState.open}
-                autoHideDuration={6000}
-                onClose={handleSnackbarClose}
-            >
-                <Alert onClose={handleSnackbarClose} severity={snackbarState.severity} sx={{ width: '100%' }}>
-                    {snackbarState.message}
-                </Alert>
-            </Snackbar>
+            
+
+            <SnackbarCompenent snackbarState={snackbarState} handleSnackbarClose={handleSnackbarClose} />
         </Box>
     );
 };

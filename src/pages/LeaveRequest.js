@@ -6,34 +6,28 @@ import SessionHelper from '../helpers/SessionHelper';
 import LeaveTableEmployee from '../components/LeaveTableEmployee';
 import { Alert, Box, Button, Snackbar } from '@mui/material';
 import AddRecordDialog from '../components/LeaveForm';
+import useSnackbar from '../hooks/useSnackbar';
+import SnackbarCompenent from '../components/SnackbarCompenent';
+import LoadingPage from './LoadingPage';
 
 const LeaveRequest = () => {
     const { user } = SessionHelper.getUser();
+
+    const { snackbarState, handleSnackbarOpen, handleSnackbarClose } = useSnackbar();
     const [dialogState, setDialogState] = useState(false);
 
     const handleDialogToggle = (state) => {
         setDialogState(state);
     }
 
-    const [snackbarState, setSnackbarState] = useState({
-        open: false,
-        message: '',
-        severity: 'success',
-    });
-    const handleSnackbarOpen = (message, severity) => {
-        setSnackbarState({ open: true, message, severity });
-    };
 
-    const handleSnackbarClose = () => {
-        setSnackbarState({ ...snackbarState, open: false });
-    };
 
     const employeeQuery = useQuery({
         queryKey: ['employee'],
         queryFn: () => fetchEmployees(),
     });
 
-    if (employeeQuery.isLoading) return <div>Loading...</div>;
+    if (employeeQuery.isLoading) return <LoadingPage/>;
     if (employeeQuery.error) return <div >fasdfa</div>;
 
 
@@ -54,15 +48,7 @@ const LeaveRequest = () => {
                 employeeId={employeeQuery.data.id}
                 handleSnackbarOpen={handleSnackbarOpen}
             />
-            <Snackbar
-                open={snackbarState.open}
-                autoHideDuration={6000}
-                onClose={handleSnackbarClose}
-            >
-                <Alert onClose={handleSnackbarClose} severity={snackbarState.severity} sx={{ width: '100%' }}>
-                    {snackbarState.message}
-                </Alert>
-            </Snackbar>
+            <SnackbarCompenent snackbarState={snackbarState} handleSnackbarClose={handleSnackbarClose} />
         </Box>
 
 

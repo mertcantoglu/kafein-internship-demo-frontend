@@ -10,8 +10,6 @@ import {
 } from '@mui/material';
 import { ExpandMore, Delete, CheckCircleOutline, Block } from '@mui/icons-material';
 import { styled } from '@mui/material/styles';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { deleteLeaveRecord, leaveApprove, leaveReject } from '../helpers/API';
 
 const ExpandMoreIcon = styled((props) => {
   const { expand, ...other } = props;
@@ -23,7 +21,7 @@ const ExpandMoreIcon = styled((props) => {
   }),
 }));
 
-const EmployeeCardLeave = ({ employee, handleSnackbarOpen , onDelete , onApprove, onReject}) => {
+const EmployeeCardLeave = ({ employee , onDelete , onApprove, onReject}) => {
 
 
   const [expanded, setExpanded] = useState(false);

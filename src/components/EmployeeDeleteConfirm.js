@@ -10,26 +10,33 @@ import {
 } from '@mui/material';
 import { deleteEmployee } from '../helpers/API';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
 
-const DeleteConfirmationDialog = ({ open, handleClose, employeeId, handleSnackbarOpen, refetchData }) => {
+const DeleteConfirmationDialog = ({ open, handleClose, employeeId, handleSnackbarOpen }) => {
     const navigate = useNavigate();
     const [confirmation, setConfirmation] = useState('');
+
+    const deleteMutation = useMutation({
+        mutationFn: deleteEmployee,
+        onSuccess: () => {
+            handleSnackbarOpen('Employee deleted successfully', 'success');
+            navigate('/employee');
+            handleClose();
+        },
+        onError: (error) => {
+            console.error('Error deleting employee:', error);
+            handleSnackbarOpen(error.response?.data?.message || 'Failed to delete employee', 'error');
+        }
+    });
 
     const handleSubmit = async () => {
         if (confirmation !== 'DELETE') {
             handleSnackbarOpen('Please type DELETE to confirm.', 'warning');
             return;
         }
+        
+        deleteMutation.mutate(employeeId);
 
-        try {
-            await deleteEmployee(employeeId);
-            handleSnackbarOpen('Employee deleted successfully', 'success');
-            navigate('/employees');
-            handleClose();
-        } catch (error) {
-            console.error('Error deleting employee:', error);
-            handleSnackbarOpen(error.response?.data?.message || 'Failed to delete employee', 'error');
-        }
     };
 
     return (
