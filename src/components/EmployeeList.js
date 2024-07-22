@@ -4,6 +4,7 @@ import { useQuery } from '@tanstack/react-query';
 import { ChevronRight } from '@mui/icons-material';
 import { fetchEmployees } from '../helpers/API';
 import { useNavigate } from 'react-router-dom';
+import LoadingPage from '../pages/LoadingPage';
 
 function EmployeeList({ searchQuery }) {
   const navigate = useNavigate();
@@ -18,7 +19,7 @@ function EmployeeList({ searchQuery }) {
     (`${employee.firstName} ${employee.lastName}`).toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <LoadingPage />;
   if (error) return <div>Error: {error.message}</div>;
 
   return (

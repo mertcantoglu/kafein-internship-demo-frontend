@@ -10,20 +10,49 @@ import {
     IconButton,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { deleteLeaveRecord } from '../helpers/API';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import BlockIcon from '@mui/icons-material/Block';
+import useLeaveMutations from '../hooks/useLeaveMutations';
 
-const LeaveTable = ({ leaves, handleSnackbarOpen , refetchData}) => {
-    const handleDelete = async (id) => {
-        try {
-            await deleteLeaveRecord(id);
-            handleSnackbarOpen('Record deleted successfully', 'success');
-            refetchData();
-            
-        } catch (error) {
-            console.error('Error deleting record:', error);
-            handleSnackbarOpen(error.response?.data?.message || 'Failed to delete record', 'error');
+
+
+const LeaveTable = ({ leaves, handleSnackbarOpen }) => {
+
+   const { mutationDelete, mutationApprove, mutationReject } = useLeaveMutations(handleSnackbarOpen);
+
+    const renderActions = (leave) => {
+        switch (leave.status) {
+            case 'PENDING':
+                return (
+                    <>
+                        <IconButton onClick={() => mutationDelete.mutate(leave.id)}>
+                            <DeleteIcon />
+                        </IconButton>
+                        <IconButton onClick={() => mutationReject.mutate(leave.id)}>
+                            <BlockIcon />
+                        </IconButton>
+                        <IconButton onClick={() => mutationApprove.mutate(leave.id)}>
+                            <CheckCircleOutlineIcon />
+                        </IconButton>
+                    </>
+                );
+            case 'APPROVE':
+                return (
+                    <IconButton disabled>
+                        <CheckCircleOutlineIcon color="success" />
+                    </IconButton>
+                );
+            case 'REJECT':
+                return (
+                    <IconButton disabled>
+                        <BlockIcon color="error" />
+                    </IconButton>
+                );
+            default:
+                return null;
         }
     };
+
 
     return (
         <TableContainer component={Paper}>
@@ -46,11 +75,8 @@ const LeaveTable = ({ leaves, handleSnackbarOpen , refetchData}) => {
                             <TableCell>{leave.reason || 'N/A'}</TableCell>
                             <TableCell>{new Date(leave.createdAt).toLocaleString()}</TableCell>
                             <TableCell>{leave.dayDifference}</TableCell>
-                            <TableCell>
-                                <IconButton onClick={() => handleDelete(leave.id)}>
-                                    <DeleteIcon />
-                                </IconButton>
-                            </TableCell>
+                            <TableCell
+                            align='center'>{renderActions(leave)}</TableCell>
                         </TableRow>
                     ))}
                 </TableBody>

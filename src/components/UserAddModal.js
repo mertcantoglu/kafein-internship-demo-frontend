@@ -1,6 +1,6 @@
 // components/UserAddModal.js
 import React from 'react';
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField } from '@mui/material';
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, TextField, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 
 const UserAddModal = ({ open, onClose, onAddUser, newUser, handleChange }) => {
     return (
@@ -52,6 +52,20 @@ const UserAddModal = ({ open, onClose, onAddUser, newUser, handleChange }) => {
                     value={newUser.password}
                     onChange={handleChange}
                 />
+
+                <FormControl fullWidth margin="dense" variant="outlined" required>
+                    <InputLabel>Role</InputLabel>
+                    <Select
+                        name="role"
+                        value={newUser.role}
+                        onChange={handleChange}
+                        label="Role"
+                    >
+                        <MenuItem value="ADMIN">Admin</MenuItem>
+                        <MenuItem value="USER">User</MenuItem>
+                    </Select>
+                </FormControl>
+
             </DialogContent>
             <DialogActions>
                 <Button onClick={onClose} color="secondary">

@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { TextField, Button, Dialog, DialogContent, DialogTitle, DialogContentText, DialogActions } from '@mui/material';
 import { updateEmployee } from '../helpers/API';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-function EmployeeEditForm({ handleModalClose, open, employeeProps, handleSnackbarOpen, refetchData }) {
+function EmployeeEditForm({ handleModalClose, open, employeeProps, handleSnackbarOpen}) {
+
+    const queryClient = useQueryClient();
 
     const fields = [
         { name: 'firstName', label: 'First Name' },
@@ -11,25 +14,25 @@ function EmployeeEditForm({ handleModalClose, open, employeeProps, handleSnackba
         { name: 'department', label: 'Department' }
     ]
 
-    const [employee, setEmployee] = useState(employeeProps);
+    const [employee, setEmployee] = useState({...employeeProps , 'role': 'EMPLOYEE'});
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setEmployee({ ...employee, [name]: value });
     };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            await updateEmployee(employee);
+    const updateMutation = useMutation({
+        mutationFn: updateEmployee,
+        onSuccess: () => {
+            queryClient.invalidateQueries(['employee' , employee.id]);
             handleSnackbarOpen('Employee updated successfully', 'success');
-            refetchData();
             handleModalClose();
-        } catch (error) {
-            console.error('Error updating employee:', error);
-            handleSnackbarOpen(error.response?.data?.message || 'Failed to update employee', 'error');
+        },
+        onError: (error) => {
+            handleSnackbarOpen(`Failed to update employee: ${error.response?.data.message}`, 'error');
         }
-    };
+    });
+
 
     return (
         <Dialog
@@ -43,7 +46,7 @@ function EmployeeEditForm({ handleModalClose, open, employeeProps, handleSnackba
             </DialogContentText>
 
             <DialogContent>
-                <form onSubmit={handleSubmit}>
+                <form>
                     {fields.map(field => (
                         <TextField
                             key={field.name}
@@ -71,7 +74,7 @@ function EmployeeEditForm({ handleModalClose, open, employeeProps, handleSnackba
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleModalClose}>Cancel</Button>
-                <Button onClick={handleSubmit}>Edit</Button>
+        <Button onClick={() => updateMutation.mutate(employee)}>Edit</Button>
             </DialogActions>
         </Dialog>
     );
