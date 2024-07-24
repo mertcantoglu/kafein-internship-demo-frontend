@@ -52,4 +52,5 @@ class SessionHelper {
     }
 }
 
-export default new SessionHelper();
+const sessionHelper = new SessionHelper();
+export default sessionHelper;

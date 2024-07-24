@@ -1,12 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchEmployee, fetchEmployeeLeaves } from '../helpers/API';
-import { Box, Paper, Typography, Snackbar, Alert } from '@mui/material';
+import { fetchEmployee } from '../helpers/API';
+import { Box, Paper, Typography} from '@mui/material';
 import EmployeeActions from '../components/EmployeeActions';
 import EmployeeCard from '../components/EmployeeCard';
 import LeaveTable from '../components/LeaveTable';
-import AddRecordDialog from '../components/LeaveForm';
+
 import EmployeeEditForm from '../components/EmployeeEditForm';
 import DeleteConfirmationDialog from '../components/EmployeeDeleteConfirm';
 import EmployeeNotFound from '../components/EmployeeNotFound';

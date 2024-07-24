@@ -114,5 +114,15 @@ export const fetchPendingRequests = async () => {
   return response.data;
 }
 
+export const fetchTodayLeaves = async () => {
+  
+  const response = await api.get('/employees' , {
+    params: {
+      date: new Date().toISOString().split('T')[0]
+    }
+  });
+  return response.data;
+}
+
 
 
