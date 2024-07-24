@@ -21,7 +21,7 @@ const ExpandMoreIcon = styled((props) => {
   }),
 }));
 
-const EmployeeCardLeave = ({ employee , onDelete , onApprove, onReject}) => {
+const EmployeeCardLeave = ({ employee , onDelete , onApprove, onReject , showActions }) => {
 
 
   const [expanded, setExpanded] = useState(false);
@@ -67,7 +67,8 @@ const EmployeeCardLeave = ({ employee , onDelete , onApprove, onReject}) => {
               <Typography variant="body2">
                 <strong>Day Difference:</strong> {leave.dayDifference}
               </Typography>
-              <Grid container spacing={1} sx={{ mt: 1 }}>
+
+              {showActions && (<Grid container spacing={1} sx={{ mt: 1 }}>
                 <Grid item>
                   <IconButton onClick={()=> onDelete.mutate(leave.id)} color="error">
                     <Delete />
@@ -84,6 +85,8 @@ const EmployeeCardLeave = ({ employee , onDelete , onApprove, onReject}) => {
                   </IconButton>
                 </Grid>
               </Grid>
+            )}
+              
             </div>
           ))}
         </Collapse>

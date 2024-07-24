@@ -36,6 +36,7 @@ export const PendingRequsts = () => {
                     onDelete={mutationDelete}
                     onApprove={mutationApprove}
                     onReject={mutationReject}
+                    showActions = {true}
                 />
             ))}
 

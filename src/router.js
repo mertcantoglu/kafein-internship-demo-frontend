@@ -17,12 +17,14 @@ import LeaveRequest from './pages/LeaveRequest';
 import AccessDenied from './pages/AccessDenied';
 import PageNotFound from './pages/PageNotFound';
 import { PendingRequsts } from './pages/PendingRequsts';
+import { TodayLeaves } from './pages/TodayLeaves';
 
 const protoctedPages = [
     { name: 'Employee', path: 'employee', element: <Employee /> , roles: ['ADMIN', 'USER'] },
     { name: 'Pending Requests', path: 'pending', element: <PendingRequsts /> , roles: ['ADMIN', 'USER'] },
     { name: 'Users', path: 'users', element: <Users /> , roles : ['ADMIN']},
-    { name : 'Leave Request' , path: 'request' , element: <LeaveRequest /> , roles : ['EMPLOYEE'] }
+    { name : 'Leave Request' , path: 'request' , element: <LeaveRequest /> , roles : ['EMPLOYEE'] },
+    { name: 'Today Leaves', path: 'today', element: <TodayLeaves />, roles: ['ADMIN', 'USER']},
 ];
 
 const ProtectedRoute = ({ element , roles }) => {
