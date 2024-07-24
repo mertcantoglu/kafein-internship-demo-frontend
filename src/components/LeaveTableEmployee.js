@@ -7,23 +7,9 @@ import {
     TableHead,
     TableRow,
     Paper,
-    IconButton,
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import { deleteLeaveRecord } from '../helpers/API';
 
 const LeaveTableEmployee = ({ leaves, handleSnackbarOpen , refetchData}) => {
-    const handleDelete = async (id) => {
-        try {
-            await deleteLeaveRecord(id);
-            handleSnackbarOpen('Record deleted successfully', 'success');
-            refetchData();
-            
-        } catch (error) {
-            console.error('Error deleting record:', error);
-            handleSnackbarOpen(error.response?.data?.message || 'Failed to delete record', 'error');
-        }
-    };
 
     return (
         <TableContainer component={Paper}>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Box, Button, Snackbar, Alert, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Paper, Typography } from '@mui/material';
+import { Box, Button, Snackbar, Alert, List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Paper } from '@mui/material';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Add, Delete } from '@mui/icons-material';
+import { Delete } from '@mui/icons-material';
 import { fetchUsers, addUser, deleteUser } from '../helpers/API';
 import UserAddModal from '../components/UserAddModal';
 import LoadingPage from './LoadingPage';

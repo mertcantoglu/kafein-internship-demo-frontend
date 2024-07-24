@@ -1,17 +1,15 @@
 import React, { useState } from 'react'
 import EmployeeCard from '../components/EmployeeCard';
-import { fetchEmployeeLeaves, fetchEmployees } from '../helpers/API';
+import { fetchEmployees } from '../helpers/API';
 import { useQuery } from '@tanstack/react-query';
-import SessionHelper from '../helpers/SessionHelper';
 import LeaveTableEmployee from '../components/LeaveTableEmployee';
-import { Alert, Box, Button, Snackbar } from '@mui/material';
+import {  Box, Button} from '@mui/material';
 import AddRecordDialog from '../components/LeaveForm';
 import useSnackbar from '../hooks/useSnackbar';
 import SnackbarCompenent from '../components/SnackbarCompenent';
 import LoadingPage from './LoadingPage';
 
 const LeaveRequest = () => {
-    const { user } = SessionHelper.getUser();
 
     const { snackbarState, handleSnackbarOpen, handleSnackbarClose } = useSnackbar();
     const [dialogState, setDialogState] = useState(false);

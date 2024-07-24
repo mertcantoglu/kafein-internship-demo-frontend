@@ -4,7 +4,6 @@ import {
     Navigate,
     BrowserRouter as Router,
     Routes,
-    Outlet,
 } from "react-router-dom";
 
 import { Employee } from './pages/Employee';
